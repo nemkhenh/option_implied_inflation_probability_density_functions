@@ -25,8 +25,8 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages  # ADDED (for multi-page PDF)
 
 #EDIT THIS ONLY
-DATA_DIR=r"/content" #<-- change to your folder path
-RESULTS_CSV= "NGUYEN_MIEUZET_MORENO_PASTUSZKA_VALENIA_option_prices.csv"
+DATA_DIR=r"/content" #<-- change to your folder path with the data files
+RESULTS_CSV= "results.csv"
 
 #----------------------Data------------------------------------------
 caps = pd.read_csv(os.path.join(DATA_DIR, "cleaned_caps_quotes_1y.csv"))
