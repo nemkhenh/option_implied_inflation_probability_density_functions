@@ -45,20 +45,19 @@ pi in [-1\%, 5\%]
 ## Repository Structure
 
 ```text
-implied-inflation-moments/
+option_implied_inflation_probability_density_functions/
 ├─ README.md
 ├─ requirements.txt
 ├─ LICENSE
 ├─ .gitignore
-├─ src/
-│ └─ options_implied_inflation_pdf.py
+├─ options_implied_inflation_pdf.py
 ├─ results/
+│ ├─ fig/
 │ └─ updated_results.csv
 ├─ report/
-│ ├─ main.tex
-│ └─ figures/
+│ └─ main.tex
 └─ data/
-└─ README_DATA.md
+  └─ README_DATA.md
 ```
 
 
