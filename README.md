@@ -1,25 +1,66 @@
 # Implied Inflation Distributions and Moments (1Y)
 
-This project recovers **risk-neutral 1Y inflation distributions and moments** from option prices with a focus on **identification and stability (not forecasting)**.
+This repository implements a full pipeline to recover **risk-neutral one-year inflation distributions and moments** from option prices.
 
-Implemented methods:
-- **Breeden–Litzenberger (BL)**: prices → density via second derivative
-- **Kitsul–Wright (KW)**: local polynomial smoothing + BL identity (operational version)
-- **Bakshi–Kapadia–Madan (BKM)**: model-free moments directly from option prices
-- **Maximum Entropy (MaxEnt)**: regularized density consistent with observed prices (robustness benchmark)
+The objective is **identification and stability**, not forecasting.
 
-A key diagnostic enhancement is a **KW boundary shutdown rule**: KW estimates are suppressed when the recovered density concentrates near the information-window boundaries \([-1\%, 5\%]\), which indicates boundary-driven curvature and weak tail identification.
+We compare multiple methods and analyze when higher moments are weakly identified due to limited strike coverage and boundary effects.
+
+---
+## Methods Implemented
+
+### 1. Breeden–Litzenberger (BL)
+- Prices → Density → Moments  
+- Density recovered via second derivative of call prices:
+  \[
+  f(k) = \frac{1}{B(0,1)} \frac{\partial^2 C(k)}{\partial k^2}
+  \]
+- Sensitive to numerical noise (finite differentiation)
+
+### 2. Kitsul–Wright (KW)
+- Operational version of BL
+- Local polynomial smoothing before differentiation
+- Improves numerical stability
+
+### 3. Bakshi–Kapadia–Madan (BKM)
+- Prices → Moments directly
+- No density recovery
+- Highly sensitive to truncation and tail coverage
+
+### 4. Maximum Entropy (MaxEnt)
+- Prices → Density → Moments
+- Discrete probability grid
+- Regularized convex optimization
+- Used as a robustness benchmark
 
 ---
 
-## Repository layout
+## KW Boundary Shutdown Rule
 
-- `src/options_implied_inflation_pdf.py` : main pipeline (single file)
-- `results/updated_results.csv` : generated moment time series
-- `report/` : LaTeX report + figures
-- `data/` : **empty** (raw Bloomberg data not included)
+Information window:
+pi in [-1\%, 5\%]
 
 ---
+
+## Repository Structure
+
+```text
+implied-inflation-moments/
+├─ README.md
+├─ requirements.txt
+├─ LICENSE
+├─ .gitignore
+├─ src/
+│ └─ options_implied_inflation_pdf.py
+├─ results/
+│ └─ updated_results.csv
+├─ report/
+│ ├─ main.tex
+│ └─ figures/
+└─ data/
+└─ README_DATA.md
+```
+
 
 ## Data (Bloomberg licensing)
 
@@ -37,3 +78,25 @@ To reproduce the pipeline, place your own licensed data files in `data/`.
 python -m venv .venv
 source .venv/bin/activate  # macOS/Linux
 # .venv\Scripts\activate   # Windows
+```
+
+### 2) Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### Run the pipeline
+```python
+python src\options_implied_inflation_pdf.py
+```
+
+## Authors
+
+Nam Khanh Nguyen,
+Rodrigue Mieuzet,
+Melany Gipsy Moreno,
+Khrystyna Kateryna Valenia,
+Katarzyna Pastuszka
+
+Master 2 Finance Technology Data (FTD)
+Université Paris 1 Panthéon-Sorbonne
