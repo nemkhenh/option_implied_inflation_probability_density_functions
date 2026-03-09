@@ -17,6 +17,7 @@ How to use:
 """
 
 import os
+import pickle
 import numpy as np
 import pandas as pd
 import cvxpy as cp
@@ -391,6 +392,7 @@ def kw_density_from_call(k, C, B, grid_n=200, h=None):
 # ============================================================
 
 rows=[]
+call_curves={}   # accumulate call curves for downstream analysis
 keys=swaps[["date","area"]].drop_duplicates().sort_values(["area",'date'])
 
 for (dt,area) in keys.itertuples(index=False):
@@ -409,6 +411,10 @@ for (dt,area) in keys.itertuples(index=False):
     call_curve=build_call_curve_one_date(caps_g,floors_g,B=B,ypi=ypi)
     k=call_curve["k"].to_numpy()
     C=call_curve["C"].to_numpy()
+
+    call_curves[(dt.date().isoformat(), area)] = {
+        'k': k.copy(), 'C': C.copy(), 'B': B, 'ypi': ypi
+    }
 
     #Breeden-Litzenberger
     bl=bl_density_from_call(k,C,B)
@@ -529,6 +535,9 @@ for (dt,area) in keys.itertuples(index=False):
 out=pd.DataFrame(rows).sort_values(["area","date"])
 out_path=os.path.join(OUT_DIR,RESULTS_CSV)
 out.to_csv(out_path,index=False)
+
+with open(os.path.join(OUT_DIR, "call_curves.pkl"), "wb") as fh:
+    pickle.dump(call_curves, fh)
 
 # ============================================================
 # EMPIRICAL ANALYSIS
